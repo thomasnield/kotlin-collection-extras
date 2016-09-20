@@ -1,80 +1,20 @@
-
 /**
- * Removes first **T** element from a **MutableCollection** where a condition is specified
+ * Moves the given **T** item to the specified index
  */
-inline fun <T> MutableList<T>.removeFirstWhere(crossinline predicate: (T) -> Boolean) =
-    asSequence().toList().asSequence().withIndex()
-            .find { v -> predicate.invoke(v.value) }?.let { removeAt(it.index) }?:false
-
-/**
- * Removes all **T** elements meeting a given **predicate**
- */
-fun <T> MutableList<T>.removeWhere(predicate: (T) -> Boolean) {
-    asSequence().toList().asSequence().filter(predicate)
-            .forEach { remove(it) }
+fun <T> MutableList<T>.move(item: T, newIndex: Int)  {
+    val currentIndex = indexOf(item)
+    if (currentIndex < 0) return
+    removeAt(currentIndex)
+    add(newIndex, item)
 }
 
 /**
- * Moves first **T** element found to the top of the **MutableList**
+ * Moves the given item at the `oldIndex` to the `newIndex`
  */
-fun <T> MutableList<T>.moveFirstToTop(element: T) =
-        indexOf(element).let { if (it == -1) null else it }
-            ?.let {
-                removeAt(it)
-                add(0,element)
-            }
-
-/**
- * Moves all **T** elements found to the top of the **MutableList**
- */
-fun <T> MutableList<T>.moveToTop(element: T) =
-        asSequence().withIndex().toList().asSequence()
-            .filter { it.value == element }
-            .forEach {
-                removeAt(it.index)
-                add(0,it.value)
-            }
-
-/**
- * Moves first **T** element to the top of the **MutableList** meeting a certain **predicate**
- */
-inline fun <T> MutableList<T>.moveFirstToTopWhere(crossinline predicate: (T) -> Boolean) =
-        asSequence().toList().asSequence().withIndex().find{ v -> predicate.invoke(v.value) }?.let {
-            removeAt(it.index)
-            add(0, it.value)
-            true
-        }?:false
-
-/**
- * Moves all **T** elements to the top that meet a given **predicate**
- */
-fun <T> MutableList<T>.moveToTopWhere(predicate: (T) -> Boolean) {
-    asSequence().toList().asSequence().withIndex().filter { v -> predicate.invoke(v.value)}
-            .forEach {
-                removeAt(it.index)
-                add(0,it.value)
-            }
-}
-
-/**
- * Moves first **T** element to the bottom of the **MutableList** meeting a certain **predicate**
- */
-inline fun <T> MutableList<T>.moveFirstToBottomWhere(crossinline predicate: (T) -> Boolean) =
-        asSequence().toList().asSequence().withIndex().find{ v -> predicate.invoke(v.value) }?.let {
-            removeAt(it.index)
-            add(size - 1, it.value)
-            true
-        }?:false
-
-/**
- * Moves all **T** elements to the bottom that meet a given **predicate**
- */
-fun <T> MutableList<T>.moveToBottomWhere(predicate: (T) -> Boolean) {
-    asSequence().toList().asSequence().withIndex().filter { v -> predicate.invoke(v.value)}
-            .forEach {
-                removeAt(it.index)
-                add(size - 1,it.value)
-            }
+fun <T> MutableList<T>.move(oldIndex: Int, newIndex: Int)  {
+    val item = this[oldIndex]
+    removeAt(oldIndex)
+    add(newIndex, item)
 }
 
 
@@ -132,44 +72,25 @@ fun <T> MutableList<T>.moveDown(item: T) {
 /**
  * Moves first element **T** up an index that satisfies the given **predicate**, unless its already at the top
  */
-inline fun <T> MutableList<T>.moveFirstUpWhere(crossinline predicate: (T) -> Boolean)  = find(predicate)?.let { moveUp(it) }
+inline fun <T> MutableList<T>.moveUpAll(crossinline predicate: (T) -> Boolean)  = find(predicate)?.let { moveUp(it) }
 
 /**
  * Moves first element **T** down an index that satisfies the given **predicate**, unless its already at the bottom
  */
-inline fun <T> MutableList<T>.moveFirstDownWhere(crossinline predicate: (T) -> Boolean)  = find(predicate)?.let { moveDown(it) }
+inline fun <T> MutableList<T>.moveDownAll(crossinline predicate: (T) -> Boolean)  = find(predicate)?.let { moveDown(it) }
 
 /**
  * Moves all **T** elements up an index that satisfy the given **predicate**, unless they are already at the top
  */
-inline fun <T> MutableList<T>.moveUpWhere(crossinline predicate: (T) -> Boolean)  = asSequence().withIndex()
+inline fun <T> MutableList<T>.moveUp(crossinline predicate: (T) -> Boolean)  = asSequence().withIndex()
         .filter { predicate.invoke(it.value) }
         .forEach { moveUpAt(it.index) }
 
 /**
  * Moves all **T** elements down an index that satisfy the given **predicate**, unless they are already at the bottom
  */
-inline fun <T> MutableList<T>.moveDownWhere(crossinline predicate: (T) -> Boolean)  = asSequence().withIndex()
+inline fun <T> MutableList<T>.moveDown(crossinline predicate: (T) -> Boolean)  = asSequence().withIndex()
         .filter { predicate.invoke(it.value) }
         .forEach { moveDownAt(it.index) }
-
-/**
- * Checks if a given **Collection<T>** contains any elements of another **Collection<T>**
- */
-fun <T> Collection<T>.containsAny(collection: Collection<T>) = asSequence().any { it in collection }
-
-
-/**
- * Checks if a given **Collection<T>** contains all elements of another **Collection<T>**
- */
-fun <T> Collection<T>.containsAll(collection: Collection<T>) = asSequence().all { it in collection }
-
-
-/**
- * Only adds an element to a **MutableList** if it is not already added to it
- */
-fun <T> MutableList<T>.addIfAbsent(element: T) = if (element in this) false else add(element)
-
-
 
 
