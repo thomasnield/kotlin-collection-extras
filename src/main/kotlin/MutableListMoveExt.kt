@@ -104,4 +104,21 @@ inline fun <T> MutableList<T>.moveDownAll(crossinline predicate: (T) -> Boolean)
         .filter { predicate.invoke(it.value) }
         .forEach { moveDownAt(it.index) }
 
+/**
+ * Swaps the position of two items at two respective indices
+ */
+fun <T> MutableList<T>.swap(indexOne: Int, indexTwo: Int) {
+    val firstItem = this[indexOne]
+    val secondItem = this[indexTwo]
 
+    removeAt(indexOne)
+    removeAt(indexTwo)
+
+    add(indexOne,secondItem)
+    add(indexTwo,firstItem)
+}
+
+/**
+ * Swaps the index position of two items
+ */
+fun <T> MutableList<T>.swap(itemOne: T, itemTwo: T) = swap(indexOf(itemOne),indexOf(itemTwo))

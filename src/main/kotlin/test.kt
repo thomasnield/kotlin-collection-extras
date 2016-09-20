@@ -19,4 +19,7 @@ fun main(args: Array<String>) {
     items.moveUp("Epsilon")
     println(items)
 
+    //move item at index 5 to index 3
+    items.move(5,3)
+    println(items)
 }
