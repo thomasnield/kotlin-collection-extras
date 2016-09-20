@@ -72,24 +72,24 @@ fun <T> MutableList<T>.moveDown(item: T) {
 /**
  * Moves first element **T** up an index that satisfies the given **predicate**, unless its already at the top
  */
-inline fun <T> MutableList<T>.moveUpAll(crossinline predicate: (T) -> Boolean)  = find(predicate)?.let { moveUp(it) }
+inline fun <T> MutableList<T>.moveUp(crossinline predicate: (T) -> Boolean)  = find(predicate)?.let { moveUp(it) }
 
 /**
  * Moves first element **T** down an index that satisfies the given **predicate**, unless its already at the bottom
  */
-inline fun <T> MutableList<T>.moveDownAll(crossinline predicate: (T) -> Boolean)  = find(predicate)?.let { moveDown(it) }
+inline fun <T> MutableList<T>.moveDown(crossinline predicate: (T) -> Boolean)  = find(predicate)?.let { moveDown(it) }
 
 /**
  * Moves all **T** elements up an index that satisfy the given **predicate**, unless they are already at the top
  */
-inline fun <T> MutableList<T>.moveUp(crossinline predicate: (T) -> Boolean)  = asSequence().withIndex()
+inline fun <T> MutableList<T>.moveUpAll(crossinline predicate: (T) -> Boolean)  = asSequence().withIndex()
         .filter { predicate.invoke(it.value) }
         .forEach { moveUpAt(it.index) }
 
 /**
  * Moves all **T** elements down an index that satisfy the given **predicate**, unless they are already at the bottom
  */
-inline fun <T> MutableList<T>.moveDown(crossinline predicate: (T) -> Boolean)  = asSequence().withIndex()
+inline fun <T> MutableList<T>.moveDownAll(crossinline predicate: (T) -> Boolean)  = asSequence().withIndex()
         .filter { predicate.invoke(it.value) }
         .forEach { moveDownAt(it.index) }
 
