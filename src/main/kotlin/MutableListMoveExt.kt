@@ -17,6 +17,17 @@ fun <T> MutableList<T>.move(oldIndex: Int, newIndex: Int)  {
     add(newIndex, item)
 }
 
+/**
+ * Moves all items meeting a predicate to the given index
+ */
+fun <T> MutableList<T>.moveAll(newIndex: Int, predicate: (T) -> Boolean) {
+
+    var newIndexIncrement = newIndex
+
+    asSequence().toList().asSequence().withIndex()
+            .filter { v -> predicate.invoke(v.value) }
+            .forEach { move(it.index, newIndexIncrement++) }
+}
 
 /**
  * Moves the given element at specified index up the **MutableList** by one increment
