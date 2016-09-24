@@ -1,3 +1,6 @@
+
+import java.util.*
+
 /**
  * Moves the given **T** item to the specified index
  */
@@ -11,10 +14,13 @@ fun <T> MutableList<T>.move(item: T, newIndex: Int)  {
 /**
  * Moves the given item at the `oldIndex` to the `newIndex`
  */
-fun <T> MutableList<T>.move(oldIndex: Int, newIndex: Int)  {
+fun <T> MutableList<T>.moveAt(oldIndex: Int, newIndex: Int)  {
     val item = this[oldIndex]
     removeAt(oldIndex)
-    add(newIndex, item)
+    if (oldIndex > newIndex)
+        add(newIndex, item)
+    else
+        add(newIndex - 1, item)
 }
 
 /**
@@ -24,9 +30,9 @@ fun <T> MutableList<T>.moveAll(newIndex: Int, predicate: (T) -> Boolean) {
 
     var newIndexIncrement = newIndex
 
-    asSequence().toList().asSequence().withIndex()
+    toList().asSequence().withIndex()
             .filter { v -> predicate.invoke(v.value) }
-            .forEach { move(it.index, newIndexIncrement++) }
+            .forEach { moveAt(it.index, newIndexIncrement++) }
 }
 
 /**
@@ -57,26 +63,32 @@ fun <T> MutableList<T>.moveDownAt(index: Int) {
 
 /**
  * Moves the given element **T** up the **MutableList** by an index increment
- * unless it is at the top already which will result in no movement
+ * unless it is at the top already which will result in no movement.
+ * Returns a `Boolean` indicating if move was successful
  */
-fun <T> MutableList<T>.moveUp(item: T) {
+fun <T> MutableList<T>.moveUp(item: T): Boolean {
     val currentIndex = indexOf(item)
+    if (currentIndex == -1) return false
     val newIndex = (currentIndex - 1)
-    if (currentIndex <=0) return
+    if (currentIndex <=0) return false
     remove(item)
     add(newIndex, item)
+    return true
 }
 
 /**
  * Moves the given element **T** up the **MutableList** by an index increment
- * unless it is at the bottom already which will result in no movement
+ * unless it is at the bottom already which will result in no movement.
+ * Returns a `Boolean` indicating if move was successful
  */
-fun <T> MutableList<T>.moveDown(item: T) {
+fun <T> MutableList<T>.moveDown(item: T): Boolean {
     val currentIndex = indexOf(item)
+    if (currentIndex == -1) return false
     val newIndex = (currentIndex + 1)
-    if (newIndex >= size)  return
+    if (newIndex >= size)  return false
     remove(item)
     add(newIndex, item)
+    return true
 }
 
 
@@ -108,14 +120,7 @@ inline fun <T> MutableList<T>.moveDownAll(crossinline predicate: (T) -> Boolean)
  * Swaps the position of two items at two respective indices
  */
 fun <T> MutableList<T>.swap(indexOne: Int, indexTwo: Int) {
-    val firstItem = this[indexOne]
-    val secondItem = this[indexTwo]
-
-    removeAt(indexOne)
-    removeAt(indexTwo)
-
-    add(indexOne,secondItem)
-    add(indexTwo,firstItem)
+    Collections.swap(this, indexOne,indexTwo)
 }
 
 /**
