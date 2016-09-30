@@ -27,12 +27,11 @@ fun <T> MutableList<T>.moveAt(oldIndex: Int, newIndex: Int)  {
  * Moves all items meeting a predicate to the given index
  */
 fun <T> MutableList<T>.moveAll(newIndex: Int, predicate: (T) -> Boolean) {
-
-    var newIndexIncrement = newIndex
-
-    toList().asSequence().withIndex()
-            .filter { v -> predicate.invoke(v.value) }
-            .forEach { moveAt(it.index, newIndexIncrement++) }
+    check(newIndex >= 0 && newIndex < size)
+    val split = partition(predicate)
+    clear()
+    addAll(split.second)
+    addAll(if (newIndex >= size) size else newIndex,split.first)
 }
 
 /**
